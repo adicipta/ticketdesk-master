@@ -1,0 +1,1 @@
+[14-May-2016 10:56:03 America/Denver] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/joevegan/public_html/ticketdesk/include/functions.php on line 31

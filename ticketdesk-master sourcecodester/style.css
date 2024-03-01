@@ -1,0 +1,52 @@
+#newTicket {
+    margin: 10px auto;
+    float:left;
+    width: 50%;
+}
+#recentTickets {
+    margin: 10px 0 0 51%;
+    width: 49%;
+    //display:none;
+}
+#content {
+    width:95%;
+    margin: 90px auto;
+    display:table;
+}
+#totals {
+    position:absolute;
+    bottom:0;
+    right:20px;
+}
+#displayTickets {
+
+}
+.subMenu {
+    top:38px; 
+    margin-bottom:-50px;
+    height:38px;
+    min-height:0px;
+    padding:0px;
+    z-index:100; 
+}
+.submenu > .navbar-inner .navbar-nav > .active > a,  
+.navbar-inverse .navbar-nav > .active > a:focus {
+    height:38px;
+}
+.verticalonly{
+    width:100%;
+    resize:vertical;
+}
+#loginPanel {
+    margin:2em; 
+    margin:50px 60px 0px 60px;
+}
+
+body:after {
+    content: "Created by: Roby wiranata";
+}
+ 
+body {
+    background: #ddd; /* For browsers that do not support gradients */
+ 
+}
