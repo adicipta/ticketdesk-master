@@ -45,7 +45,7 @@ class report {
 	    $output = fopen('php://output', 'w');
 
 	    // output the column headings
-	    fputcsv($output, array('TicketId','clientId','open_date','update_date', 'opened_by','assigned_to','Details','Status','Category','SubCategory','Notes'));
+	    fputcsv($output, array('TicketId','clientId','open_date','update_date', 'opened_by','assigned_to','Details','Status','Category','SubCategory','Notes'), "\t");
 
 	  $where = '';
 	  if(!empty($this->startDate) && !empty($this->endDate)){
@@ -82,25 +82,34 @@ class report {
 					t.assigneduser,
 					t.comments,
 					ts.status,
-					c.name,
-					sc.name
+					c.name AS category_name,
+					sc.name AS sub_category_name
 					 from tickets t inner join categories c on c.id = t.categoryid inner join ticketstatus ts on ts.ticketid = t.id inner join subcategories sc on t.subcategoryid = sc.id  $where order by t.opendate desc";
 					 // echo $sql;
-      $result = $this->mysqli->query($sql);
+      	$result = $this->mysqli->query($sql);
 
-			if ($result->num_rows > 0) {
-				while($row = $result->fetch_assoc()) { 
-					$note = "";
-					$qry = $this->mysqli->query("SELECT * from ticketnotes where ticketid = {$row['id']} ");
-					$note = $qry->num_rows > 0 ? $qry->fetch_array()['note'] : $note;
-					$row[count($row)] = $note;
-					fputcsv($output, $row);
-					// var_dump($row);
-					}
+		if ($result->num_rows > 0) {
+			while($row = $result->fetch_assoc()) { 
+				$note = "";
+				$qry = $this->mysqli->query("SELECT * from ticketnotes where ticketid = {$row['id']} ");
+				$note = $qry->num_rows > 0 ? $qry->fetch_array()['note'] : $note;
+
+				// replace special characters in the note with spaces
+				$note = str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $note);
+
+				$row['Category'] = $row['category_name'];
+				$row['SubCategory'] = $row['sub_category_name'];
+				$row['Notes'] = $note;
+
+				// remove alias columns to avoid writing them to the excel file 
+				unset($row['category_name']);
+				unset($row['sub_category_name']);
+			
+				fputcsv($output, $row, "\t");
 			}
-			fclose($output);
-		  mysqli_close($this->mysqli);
-
+		}
+		fclose($output);
+		mysqli_close($this->mysqli);
 	}
 }
 
