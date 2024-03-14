@@ -239,23 +239,31 @@ class ticket {
 		*/
 		private function addAttachment(){
 			$target_dir = "uploads/";
-			$fileName =  basename($_FILES["fileToUpload"]["name"]);
-			$target_file = $target_dir . $fileName . date("Ymd\_His");
-			if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-	        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
-					# save file location in database
-					$sql = "insert into ticketattachments (ticketid,filepath,filename,filetype) values (?,?,?,null);";
+			
+			// iterate through each selected file.
+			for ($i = 0; $i < count($_FILES['fileToUpload']['name']); $i++) {
+				$fileName =  basename($_FILES["fileToUpload"]["name"][$i]);
+				// add a unique index to the file name.
+				$target_file = $target_dir . $fileName . date("Ymd\_His") . "_" . $i;
+		
+				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"][$i], $target_file)) {
+					echo "The file ". basename($_FILES["fileToUpload"]["name"][$i]). " has been uploaded.";
+					// save the file location in the database
+					$sql = "INSERT INTO ticketattachments (ticketid, filepath, filename, filetype) VALUES (?, ?, ?, null);";
 					if ($insert_stmt = $this->mysqli->prepare($sql)) {
-						$insert_stmt->bind_param('iss',$this->id,$target_file,$fileName);
+						$insert_stmt->bind_param('iss', $this->id, $target_file, $fileName);
 						if (! $insert_stmt->execute()) {
 							return false;
 						}
 					}
-	    } else {
-	        echo "<br>No file was uploaded";
-	    }
-
+				} else {
+					echo "<br>No file was uploaded";
+				}
+			}
 		}
+		
+
+
 
 		/**
 		* display all attachemnts linked to ticket
@@ -266,7 +274,18 @@ class ticket {
 
 			if ($result->num_rows > 0) {
 				while($row = $result->fetch_assoc()) {
-					echo '<a href="'. $row['filepath'] . '" target="blank">'. $row['filename'] . '</a> ';
+					$fileName = $row['filename'];
+					$fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+					$filePath = $row['filepath'];
+
+					// display preview picture
+					if (in_array($fileExtension, ['jpg', 'jpeg', 'png'])) {
+						echo '<a href="' . $filePath . '" target="blank">';
+						echo '<img src="' . $filePath . '" alt="' . $fileName . '" style="max-width: 250px; max-height: 250px;">';
+						echo '</a>';
+					} else {
+						echo '<a href="' . $filePath . '" target="blank">'. $fileName . '</a>';
+					}
 				}
 			}
 		}

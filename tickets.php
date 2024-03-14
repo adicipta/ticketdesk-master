@@ -260,15 +260,16 @@ if (isset($_POST['updateTicket'])) {
  <?php } ?>
 											<div class="form-group">
 												<label for="comments" class="col-sm-2 control-label">Upload</label>
-													<div class="col-sm-10">
-														<div class="input-group">
-															<input type="text" class="form-control" readonly>
-								                <label class="input-group-btn">
-								                    <span class="btn btn-default">
-								                        Browse...<input id="fileToUpload" name="fileToUpload" type="file" style="display: none;" multiple>
-								                    </span>
-								                </label>
-								            </div>
+												<div class="col-sm-10">
+													<div class="input-group">
+														<input type="text" class="form-control" id="selectedFiles" readonly>
+														<label class="input-group-btn">
+															<span class="btn btn-default">
+																Browse...<input id="fileToUpload[]" name="fileToUpload[]" type="file" style="display: none;" multiple onchange="showSelectedFiles()">
+															</span>
+														</label>
+													</div>
+
 													</div>
 			                </div>
 											<div class="form-group">
@@ -306,6 +307,17 @@ if (isset($_POST['updateTicket'])) {
 <script type="text/javascript" src="js/jquery.min.js"></script>
 
  <script type="text/javascript">
+	function showSelectedFiles() {
+    var selectedFiles = "";
+    var input = document.getElementById("fileToUpload[]");
+    for (var i = 0; i < input.files.length; i++) {
+        selectedFiles += input.files[i].name + ", ";
+    }
+    // remove the extra comma in the end
+    selectedFiles = selectedFiles.slice(0, -2);
+    // display the selected file name in the input text
+    document.getElementById("selectedFiles").value = selectedFiles;
+	}
 	
 	$(".btnrefer").on("click", function(){
 		var id = $(this).data("id");
