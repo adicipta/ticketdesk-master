@@ -261,7 +261,7 @@ class ticket {
 		* display all attachemnts linked to ticket
 		*/
 		public function linkAttachments() {
-			$sql = "select * from ticketAttachments where ticketid =" . $this->id;
+			$sql = "select * from ticketattachments where ticketid =" . $this->id;
 			$result = $this->mysqli->query($sql);
 
 			if ($result->num_rows > 0) {
