@@ -10,5 +10,5 @@ define("DATABASE", "thesis_tmsticket");    // The database name.
 define("CAN_REGISTER", "any");
 define("DEFAULT_ROLE", "member");
  
-define("SECURE", FALSE);   
+define("SECURE", TRUE); // False for development, Set true in production  
 ?>
