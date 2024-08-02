@@ -1,10 +1,12 @@
 <?php
 
 // move to settings page
-date_default_timezone_set('America/Denver');
- if(!isset($mysqli)){
+date_default_timezone_set('Asia/Jakarta');
+
+if(!isset($mysqli)){
     include_once 'psl-config.php';   
- }
+}
+
 function sec_session_start() {
     $session_name = 'sec_session_id';   // Set a custom session name
     $secure = SECURE;
